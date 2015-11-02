@@ -26,7 +26,7 @@ Craftloader.require(
 Give it a custom key instead of the Url becoming the key
 
 ``` javascript
-Craftloader.require({ script : '/js/components/ripple.js' key : 'rippler'});
+Craftloader.require({ script : '/js/components/ripple.js', key : 'rippler'});
 
 ```
 
@@ -84,10 +84,10 @@ or remove all imports
 ##### Handle Errors when they happen
 
 ``` javascript
-  Craftloader.require({ url: 'Hamsters.js' }).then(() => {
+  Craftloader.require({ key : 'Hamsters.js' }).then(() => {
     // Success
   }).catch(err => {
     // Import failed Error
-    console.error(err);
+    console.error(err); -> 'no script/css/url found'
   });
 ```
