@@ -59,7 +59,7 @@
   this.Craftloader = {
     Import: function () {
       var obj, arg, promises = [];
-      for (arg of arguments) {
+      Array.from(arguments).forEach(arg => {
         if ((arg.test !== undefined && arg.test === false) || (arg.execute !== undefined && arg.execute === false)) {
           if (arg.test === false) Craftloader.remove((arg.css || arg.script || arg.url));
         } else {
@@ -73,7 +73,7 @@
           if (arg.expire !== undefined) obj.expire = arg.expire;
           promises.push(CraftImport(obj));
         }
-      }
+      });
       return Promise.all(promises).then(execute);
     },
     remove: key => localStorage.removeItem(PreKey + key),
