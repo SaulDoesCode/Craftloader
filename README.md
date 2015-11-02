@@ -23,15 +23,78 @@ Craftloader.require(
 
 ```
 
+Give it a custom key instead of the Url becoming the key
+
+``` javascript
+Craftloader.require({ script : '/js/components/ripple.js' key : 'rippler'});
+
+```
+
 ##### Conditionally Import or Execute an Import
 
 ``` javascript
-  Craftloader.require({script : '/Polyfill.js' , test : boolean /*  possible feuture detection for polyfilling */ )});
+  /*  posibly useful for feuture detection for polyfilling */
+  Craftloader.require({script : '/Polyfill.js' , test : boolean  )});
 ``` 
-the import will only happen if the test property in the object is true.
+the import will only happen if the test property in the object is true.      
+aditionally there is an execute property which if added and set to false,    
+will import the script or style but not execute it    
 
 
-#### TODO Finish Documentation
+##### Skip Caching the Style or Script
 
+``` javascript
+  /* 
+   *   noCache property prevents the script being cached 
+   *   when it's set to true 
+   */
+  Craftloader.require({ url: 'Crafter.js', noCache: true});
+```
 
-  
+##### Load in Script or Style after another    
+
+``` javascript
+// .then() is causaly linked to the first import
+Craftloader.require({ url : '/js/meFirst.js'}).then(() => {
+  Craftloader.require({ url : '/js/meSecond.js'});
+});
+```
+
+or
+
+``` javascript
+// Note requireMore is not causaly linked to the first require
+Craftloader.require({ url : '/js/meFirst.js'}).requireMore({ url : '/js/meSecond.js'});
+```
+
+##### Set an expiry date on an Import
+
+``` javascript
+  Craftloader.require({ url: 'Crafter.js', expire: 2 /* note it's in hours */});
+```
+
+##### To remove an Import
+
+``` javascript
+  Craftloader.remove("key or url");
+```
+or remove all imports 
+
+``` javascript
+  Craftloader.removeAll();
+```
+
+##### To get the contents of an import
+
+`var = mySourceCode = Craftloader.get("url or key");`
+
+##### Handle Errors when they happen
+
+``` javascript
+  Craftloader.require({ url: 'Hamsters.js' }).then(() => {
+    // Success
+  }).catch(err => {
+    // Import failed Error
+    console.error(err);
+  });
+```
