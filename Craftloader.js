@@ -12,21 +12,11 @@
   var ua = navigator.userAgent,
     tem,
     M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
-  if(M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) M[2] = tem[1];
+  if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) M[2] = tem[1];
   M ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
   this.CurrentBrowser.browser = M.join(' ');
 
   var PreKey = 'craft:';
-
-  function cacheModule(key, module) {
-    try {
-      localStorage.setItem(PreKey + key, JSON.stringify(module));
-      return true;
-    } catch (e) {
-      (e.name.toUpperCase().includes('QUOTA')) ? console.warn('localStorage is over QUOTA :' + e): console.warn("couldn't cache Module executing locally: " + e);
-      return false;
-    }
-  }
 
   function saveModule(obj) {
     return new Promise((success, failure) => {
@@ -37,7 +27,13 @@
           obj.noCache = obj.noCache || false;
           obj.stamp = now;
           obj.expire = now + ((obj.expire || 4500) * 60 * 60 * 1000);
-          if (!obj.noCache) cacheModule(obj.key, obj);
+          if (obj.noCache) {
+            try {
+              localStorage.setItem(PreKey + obj.key, JSON.stringify(obj));
+            } catch (e) {
+              (e.name.toUpperCase().includes('QUOTA')) ? console.warn('localStorage is over QUOTA :' + e): console.warn("couldn't cache Module executing locally: " + e);
+            }
+          }
           success(obj);
         });
       }).catch(res => failure('Could not fetch module -> ' + res));
@@ -106,7 +102,7 @@
     return promise;
   }
 
-  window.Craftloader = {
+  this.Craftloader = {
     require: function () {
       var obj = [],
         i = 0;
