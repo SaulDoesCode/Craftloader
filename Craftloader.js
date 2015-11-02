@@ -23,7 +23,7 @@
           var now = +new Date();
           obj.data = content;
           obj.stamp = now;
-          obj.expire = now + ((obj.expire || 4500) * 60 * 60 * 1000);
+          obj.expire = now + ((obj.expire || 4000) * 60 * 60 * 1000);
           if (!obj.noCache) {
             try {
               localStorage.setItem(PreKey + (obj.key || obj.url), JSON.stringify(obj));
@@ -78,6 +78,7 @@
           if (obj.url === undefined || obj.url === '' || obj.url === null) return console.error('no script/css/url found');
           if (arg.noCache === true) obj.noCache = true;
           if (arg.key !== undefined) obj.key = arg.key;
+          if (arg.expire !== undefined) obj.expire = arg.expire;
           promises.push(prepareImport(obj));
         }
       }
