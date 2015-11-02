@@ -13,7 +13,7 @@ it takes Objects as arguments.
 Each object in the require has either a script or css property that    
 containes the path/URL of the script or css stylesheet being imported.    
 
-Importing mutiple files are easy , just add more objects
+Importing mutiple files are easy , just add (more) objects
 ``` javascript
 Craftloader.require(
     { url : '/js/components/craftsocket.js'}, // url defaults to script import
@@ -58,13 +58,6 @@ will import the script or style but not execute it
 Craftloader.require({ url : '/js/meFirst.js'}).then(() => {
   Craftloader.require({ url : '/js/meSecond.js'});
 });
-```
-
-or
-
-``` javascript
-// Note requireMore is not causaly linked to the first require
-Craftloader.require({ url : '/js/meFirst.js'}).requireMore({ url : '/js/meSecond.js'});
 ```
 
 ##### Set an expiry date on an Import
