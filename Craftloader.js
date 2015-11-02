@@ -5,8 +5,7 @@
     is: browser => {
       if (CurrentBrowser.browser.toLowerCase().includes(browser.toLowerCase())) return true;
       return false;
-    },
-    browser: 'unknown'
+    }
   };
 
   var PreKey = 'craft:',
@@ -38,9 +37,9 @@
     });
   }
 
-  function serializeModule(obj) {
+  function prepareImport(obj) {
     var src, promise;
-    src = Craftloader.get(obj.url);
+    src = Craftloader.get((obj.key || obj.url));
     obj.execute = obj.execute !== false;
     if (!src || src.expire - +new Date() < 0 || obj.unique !== src.unique) {
       if (obj.unique) obj.url += ((obj.url.indexOf('?') > 0) ? '&' : '?') + 'unique=' + obj.unique;
@@ -52,7 +51,7 @@
     return promise;
   }
 
-  function execProcess(sources) {
+  function execute(sources) {
     return sources.map(obj => {
       if (obj.execute) {
         var execEl;
@@ -78,10 +77,11 @@
           };
           if (obj.url === undefined || obj.url === '' || obj.url === null) return console.error('no script/css/url found');
           if (arg.noCache === true) obj.noCache = true;
-          promises.push(serializeModule(obj));
+          if (arg.key !== undefined) obj.key = arg.key;
+          promises.push(prepareImport(obj));
         }
       }
-      return Promise.all(promises).then(execProcess);
+      return Promise.all(promises).then(execute);
     },
     remove: key => localStorage.removeItem(PreKey + key),
     get: key => {
