@@ -34,16 +34,12 @@
           }
           success(obj);
         });
-      }).catch(res => failure('Could not fetch module -> ' + res));
+      }).catch(res => failure('Could not fetch Craftloader import -> ' + res));
     });
   }
 
   function serializeModule(obj) {
     var src, promise;
-    if (obj.url === undefined) {
-      console.error('no script/css/url found');
-      return false;
-    }
     src = Craftloader.get(obj.url);
     obj.execute = obj.execute !== false;
     if (!src || src.expire - +new Date() < 0 || obj.unique !== src.unique) {
@@ -70,7 +66,7 @@
   }
 
   this.Craftloader = {
-    require: function () {
+    Import: function () {
       var obj, arg, promises = [];
       for (arg of arguments) {
         if ((arg.test !== undefined && arg.test === false) || (arg.execute !== undefined && arg.execute === false)) {
@@ -80,9 +76,9 @@
             url: (arg.script || arg.css || arg.url),
             type: arg.css ? 'css' : 'script'
           };
+          if (obj.url === undefined || obj.url === '' || obj.url === null) return console.error('no script/css/url found');
           if (arg.noCache === true) obj.noCache = true;
           promises.push(serializeModule(obj));
-          if (this.CraftedModules.indexOf(obj.url) < 0) this.CraftedModules.push(obj.url);
         }
       }
       return Promise.all(promises).then(execProcess);
@@ -101,8 +97,7 @@
         key = mod.split(PreKey)[1];
         if (key && (!expired || Craftloader.get(key).expire <= now)) Craftloader.remove(key);
       }
-    },
-    CraftedModules: []
+    }
   };
   Craftloader.removeAll(true);
 })(document);
