@@ -1,49 +1,41 @@
 'use strict';
 (document => {
+  var PreKey = 'craft:', ua = navigator.userAgent, tem, M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+  if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) M[2] = tem[1];
+  M ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
 
   this.CurrentBrowser = {
     is: browser => {
       if (CurrentBrowser.browser.toLowerCase().includes(browser.toLowerCase())) return true;
       return false;
-    }
+    },
+    browser :  M.join(' ')
   };
 
-  var PreKey = 'craft:',
-    ua = navigator.userAgent,
-    tem,
-    M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
-  if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) M[2] = tem[1];
-  M ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
-  this.CurrentBrowser.browser = M.join(' ');
-
-  function fetchImport(obj) {
-    return new Promise((success, failure) => {
-      fetch(obj.url).then(res => {
-        res.text().then(content => {
-          var now = +new Date();
-          obj.data = content;
-          obj.stamp = now;
-          obj.expire = now + ((obj.expire || 4000) * 60 * 60 * 1000);
-          if (!obj.noCache) {
-            try {
-              localStorage.setItem(PreKey + (obj.key || obj.url), JSON.stringify(obj));
-            } catch (e) {
-              (e.name.toUpperCase().includes('QUOTA')) ? console.warn('localStorage is over QUOTA :' + e): console.warn("couldn't cache Module executing locally: " + e);
-            }
-          }
-          success(obj);
-        });
-      }).catch(res => failure('Could not fetch Craftloader import -> ' + res));
-    });
-  }
-
-  function prepareImport(obj) {
+  function CraftImport(obj) {
     var src, promise;
     src = Craftloader.get((obj.key || obj.url));
     obj.execute = obj.execute !== false;
     if (!src || src.expire - +new Date() < 0 || obj.unique !== src.unique) {
       if (obj.unique) obj.url += ((obj.url.indexOf('?') > 0) ? '&' : '?') + 'unique=' + obj.unique;
-      promise = fetchImport(obj);
+      promise = new Promise((success, failure) => {
+        fetch(obj.url).then(res => {
+          res.text().then(content => {
+            var now = +new Date();
+            obj.data = content;
+            obj.stamp = now;
+            obj.expire = now + ((obj.expire || 4000) * 60 * 60 * 1000);
+            if (!obj.noCache) {
+              try {
+                localStorage.setItem(PreKey + (obj.key || obj.url), JSON.stringify(obj));
+              } catch (e) {
+                (e.name.toUpperCase().includes('QUOTA')) ? console.warn('localStorage is over QUOTA :' + e): console.warn("couldn't cache Module executing locally: " + e);
+              }
+            }
+            success(obj);
+          });
+        }).catch(res => failure('Could not fetch Craftloader import -> ' + res));
+      });
     } else {
       src.execute = obj.execute;
       promise = new Promise(resolve => resolve(src));
@@ -79,7 +71,7 @@
           if (arg.noCache === true) obj.noCache = true;
           if (arg.key !== undefined) obj.key = arg.key;
           if (arg.expire !== undefined) obj.expire = arg.expire;
-          promises.push(prepareImport(obj));
+          promises.push(CraftImport(obj));
         }
       }
       return Promise.all(promises).then(execute);
