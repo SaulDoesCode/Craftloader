@@ -17,7 +17,7 @@ Importing mutiple files are easy , just add (more) objects
 ``` javascript
 Craftloader.Import(
     { url : '/js/components/craftsocket.js'}, // url defaults to script import
-    { script : '/js/components/ripple.js'}, // fetches script
+    { script : '/js/components/ripple.js'}, // fetches script 
     { css : '/css/stylesconcat.css'} // fetches css 
 );
 
@@ -40,6 +40,12 @@ the import will only happen if the test property in the object is true.
 aditionally there is an execute property which if added and set to false,    
 will import the script or style but not execute it    
 
+##### Delay Executing a Script (defer)
+
+``` javascript
+  //  defer , delays execution till DOM is loaded
+  Craftloader.Import({script : '/dependency.js' , defer : true  )});
+``` 
 
 ##### Skip Caching the Style or Script
 
