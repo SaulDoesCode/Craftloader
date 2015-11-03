@@ -70,6 +70,7 @@
           if (obj.url === undefined || obj.url === '' || obj.url === null) return console.error('no script/css/url found');
           if (arg.noCache === true) obj.noCache = true;
           if (arg.key !== undefined) obj.key = arg.key;
+          if (arg.defer !== undefined) obj.defer = obj.key;
           if (arg.expire !== undefined) obj.expire = arg.expire;
           promises.push(CraftImport(obj));
         }
