@@ -1,19 +1,6 @@
 'use strict';
 (function (document) {
-  var PreKey = 'craft:',
-      ua = navigator.userAgent,
-      tem,
-      M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
-  if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) M[2] = tem[1];
-  M ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
-
-  window.CurrentBrowser = {
-    is: function is(browser) {
-      if (CurrentBrowser.browser.toLowerCase().includes(browser.toLowerCase())) return true;
-      return false;
-    },
-    browser: M.join(' ')
-  };
+  var PreKey = 'craft:';
 
   function CraftImport(obj) {
     var src, promise;
@@ -66,22 +53,20 @@
   window.Craftloader = {
     Import: function Import() {
       var obj,
-          arg,
           promises = [];
       for (var i = 0; i < arguments.length; i++) {
-        arg = arguments[i];
-        if (arg.test !== undefined && arg.test === false || arg.execute !== undefined && arg.execute === false) {
-          if (arg.test === false) Craftloader.remove(arg.css || arg.script || arg.url);
+        if (arguments[i].test !== undefined && arguments[i].test === false || arguments[i].execute !== undefined && arguments[i].execute === false) {
+          if (arguments[i].test === false) Craftloader.remove(arguments[i].css || arguments[i].script || arguments[i].url);
         } else {
           obj = {
-            url: arg.script || arg.css || arg.url,
-            type: arg.css ? 'css' : 'script'
+            url: arguments[i].script || arguments[i].css || arguments[i].url,
+            type: arguments[i].css ? 'css' : 'script'
           };
           if (obj.url === undefined || obj.url === '' || obj.url === null) return console.error('no script/css/url found');
-          if (arg.noCache === true) obj.noCache = true;
-          if (arg.key !== undefined) obj.key = arg.key;
-          if (arg.defer !== undefined) obj.defer = obj.key;
-          if (arg.expire !== undefined) obj.expire = arg.expire;
+          if (arguments[i].noCache === true) obj.noCache = true;
+          if (arguments[i].key !== undefined) obj.key = arguments[i].key;
+          if (arguments[i].defer !== undefined) obj.defer = obj.key;
+          if (arguments[i].expire !== undefined) obj.expire = arguments[i].expire;
           promises.push(CraftImport(obj));
         }
       }
