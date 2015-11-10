@@ -16,7 +16,7 @@ containes the path/URL of the script or css stylesheet being imported.
 Importing mutiple files are easy , just add (more) objects
 ``` javascript
 Craftloader.Import(
-    { url : '/js/components/craftsocket.js'}, // url defaults to script import
+    { css : '/js/components/craftsocket.js'}, // order is irrelevant
     { script : '/js/components/ripple.js'}, // fetches script 
     { css : '/css/stylesconcat.css'} // fetches css 
 );
@@ -27,6 +27,9 @@ Give it a custom key instead of the Url becoming the key
 
 ``` javascript
 Craftloader.Import({ script : '/js/components/ripple.js', key : 'rippler'});
+
+// to Optionally set the cache PreKey for all imports 
+Craftloader.setPreKey('CustomKey');
 
 ```
 
@@ -64,6 +67,8 @@ will import the script or style but not execute it
 Craftloader.Import({ url : '/js/meFirst.js'}).then(() => {
   Craftloader.Import({ url : '/js/meSecond.js'});
 });
+// note multiple imports will only trigger then() after 
+// every import is done
 ```
 
 ##### Set an expiry date on an Import
@@ -97,3 +102,29 @@ or remove all imports
     console.error(err); -> 'no script/css/url found'
   });
 ```
+#### Take Note
+###### -> Craftloader dependencies
+  Craftloader doesn't have any other dependencies unless you,
+  count polyfills for older Browsers.
+  Here's a list of Specific feutures Craftloader uses
+  * Fetch API
+  * Promises
+  * ES6 String , Array methods
+  * ES6 Arrow functions , let , ...rest Parameters
+  * localStorage
+  * DOM4 Element Methods
+
+Should be fine wihout es5 version on 
+* Chrome 45+
+* Firefox 44+
+* Opera 33+
+* Vivaldi*
+* MicroSoft Edge 13+
+
+##### Fear not a Babelized ES5 version is also available.
+* Minified Polyfills available in repo
+* Minified ES5 version also available.
+
+##### Fact! - Un-Minified ES6 version les than 60 lines!
+
+
