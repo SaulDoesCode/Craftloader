@@ -106,7 +106,7 @@ or remove all imports
 ###### -> Craftloader dependencies
   Craftloader doesn't have any other dependencies unless you,
   count polyfills for older Browsers.
-  Here's a list of Specific feutures Craftloader uses
+  Here's a list of Specific features Craftloader uses
   * Fetch API
   * Promises
   * ES6 String , Array methods
