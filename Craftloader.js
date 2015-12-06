@@ -13,7 +13,7 @@
     })).catch(err => failed(`Craftloader: problem fetching import -> ${err}`)));
   },
   execute = src => src.map(obj => {
-    let el = (obj.type === 'css') ? doc.createElement('style') : doc.createElement('script');
+    let el = doc.createElement(obj.type === 'css' ? 'style' : 'script');
     el.defer = obj.defer || undefined;
     el.innerHTML = obj.data;
     if (obj.exec) doc.head.appendChild(el);
