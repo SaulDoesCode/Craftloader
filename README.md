@@ -54,10 +54,10 @@ will import the script or style but not execute it
 
 ``` javascript
   /* 
-   *   noCache property prevents the script being cached 
-   *   when it's set to true 
+   *   cache property prevents the script being cached 
+   *   when it's set to false 
    */
-  Craftloader.Import({ url: 'Crafter.js', noCache: true});
+  Craftloader.Import({ url: 'Crafter.js', cache: false});
 ```
 
 ##### Load in Script or Style after another    
@@ -112,19 +112,21 @@ or remove all imports
   * ES6 String , Array methods
   * ES6 Arrow functions , let , ...rest Parameters
   * localStorage
-  * DOM4 Element Methods
 
 Should be fine wihout es5 version on 
 * Chrome 45+
-* Firefox 44+
+* Firefox 43+
 * Opera 33+
 * Vivaldi*
 * MicroSoft Edge 13+
+
+With Polyfills it should work on even older browsers.
+
 
 ##### Fear not a Babelized ES5 version is also available.
 * Minified Polyfills available in repo
 * Minified ES5 version also available.
 
-##### Fact! - Un-Minified ES6 version les than 60 lines!
+##### Fact! - Un-Minified ES6 version is less than 50 lines long!
 
 
