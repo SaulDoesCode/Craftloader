@@ -1,6 +1,6 @@
 'use strict';
-((doc) => {
-  self.Craftloader = {
+((doc, root) => {
+  root.Craftloader = {
     pre: 'craft:',
     fetchImport(obj) {
       obj.key = obj.key || obj.url;
@@ -20,8 +20,8 @@
     remove: key => localStorage.removeItem(key.includes(Craftloader.pre) ? key : Craftloader.pre + key),
     removeAll(expired) { for (let i in localStorage) if (!expired || Craftloader.get(i).expire <= +new Date()) Craftloader.remove(i) },
     Import() {
-      let promises = [];
-      Array.prototype.slice.call(arguments).forEach(arg => arg.test === false ? Craftloader.remove(arg.css || arg.script) : promises.push(Craftloader.fetchImport({
+      const promises = [];
+      Array.from(arguments).forEach(arg => arg.test === false ? Craftloader.remove(arg.css || arg.script) : promises.push(Craftloader.fetchImport({
         url: arg.css || arg.script,
         type: arg.css ? 'css' : 'script',
         exec: arg.execute !== false,
@@ -32,7 +32,7 @@
       })));
       return Promise.all(promises).then(src => src.map(obj => {
         if (!obj.exec) return;
-        let el = doc.createElement(obj.type === 'css' ? 'style' : 'script');
+        const el = doc.createElement(obj.type === 'css' ? 'style' : 'script');
         el.defer = obj.defer;
         obj.type === 'css' ? el.textContent = obj.data : el.src = URL.createObjectURL(new Blob([obj.data]));
         if (obj.key) el.setAttribute('key', obj.key);
@@ -41,4 +41,4 @@
     }
   }
   Craftloader.removeAll(true);
-})(document);
+})(document, window);
